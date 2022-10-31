@@ -5,10 +5,11 @@ def process_matrix(matrix):
     Recibe una matriz (lista de listas) de números y devuelve una nueva (con el mismo tamaño y número de elementos) con sus elementos cambiados. Cada elemento de la nueva matriz será el promedio del valor antiguo y el de sus vecinos.
     Con process_matrix transformamos los elementos de la matriz original.
     '''
+
     # Matriz vacía que ir rellenando
     processed_matrix = []
 
-    # Matriz con una sola columna
+    # Matriz con un único array (una sola "columna")
     if len(matrix) == 1:
         for j, column in enumerate(matrix[0]):
             new_element = process_element(0, j, matrix)
@@ -26,11 +27,12 @@ def process_matrix(matrix):
 
 def process_element(i, j, matrix):
     '''
-    Recibe la posición (dos coordenadas) de un elemento y calcula el promedio con sus vecinos (y lo devuelve)
+    Recibe la posición (dos coordenadas) de un elemento y calculamos su promedio con sus vecinos (y lo devuelve)
     '''
 
-    # Obtención de la lista de vecinos
+    # Obtención de la lista de las posiciones del elemento y sus vecinos
     positions_list = get_neighbour_position(i, j, matrix)
+    # Obtención de la lista de los valores de los vecinos que existen dentro de la matriz
     values_list = get_neighbour_values(positions_list, matrix)
     # Cálculo del promedio
     avrg = get_average(values_list)
@@ -39,82 +41,37 @@ def process_element(i, j, matrix):
 
 def get_neighbour_position(i, j, matrix):
     '''
-    Devuelve la lista de las posiciones de los vecinos, incluida la del propio elemento
+    Devuelve la lista de las posiciones del elemento y sus vecinos
     '''
 
     positions_list = []
-    # Una sola columna, primer elemento
-    if len(matrix) == 1 and j == 0:
-        positions_list.append([i, j])
-        positions_list.append([i, j+1])
-    # Una sola columna, elementos centrales
-    elif len(matrix) == 1 and j < len(matrix[i]) - 1:
+    # Sólo un array (una sola "columna")
+    if len(matrix) == 1:
         positions_list.append([i, j])
         positions_list.append([i, j-1])
         positions_list.append([i, j+1])
-    # Una sola columna, último elemento
-    elif len(matrix) == 1 and j == len(matrix[i]) - 1:
-        positions_list.append([i, j])
-        positions_list.append([i, j-1])
-    # Esquina superior izquierda
-    elif i == 0 and j == 0:
-        positions_list.append([i, j])
-        positions_list.append([i+1, j])
-        positions_list.append([i, j+1])
-    # Esquina superior derecha
-    elif i == 0 and j == len(matrix[i]) - 1:
-        positions_list.append([i, j])
-        positions_list.append([i, j-1])
-        positions_list.append([i+1, j])
-    # Esquina inferior izquierda
-    elif i == len(matrix) - 1 and j == 0:
-        positions_list.append([i, j])
-        positions_list.append([i-1, j])
-        positions_list.append([i, j+1])
-    # Esquina inferior derecha
-    elif i == len(matrix) - 1 and j == len(matrix[i]) - 1:
-        positions_list.append([i, j])
-        positions_list.append([i-1, j])
-        positions_list.append([i, j-1])
-    # Borde superior
-    elif i == 0 and j < len(matrix[i]) - 1:
-        positions_list.append([i, j])
-        positions_list.append([i, j-1])
-        positions_list.append([i+1, j])
-        positions_list.append([i, j+1])
-    # Borde lateral izquierdo
-    elif i != 0 and i != len(matrix) - 1 and j == 0:
-        positions_list.append([i, j])
-        positions_list.append([i-1, j])
-        positions_list.append([i, j+1])
-        positions_list.append([i+1, j])
-    # Borde lateral derecho
-    elif i != 0 and i != len(matrix) - 1 and j == len(matrix[i]) - 1:
-        positions_list.append([i, j])
-        positions_list.append([i, j-1])
-        positions_list.append([i-1, j])
-        positions_list.append([i+1, j])
-    # Borde inferior
-    elif i == len(matrix) - 1 and j < len(matrix[i]) - 1:
-        positions_list.append([i, j])
-        positions_list.append([i, j-1])
-        positions_list.append([i-1, j])
-        positions_list.append([i, j+1])
-    # Resto 
+    # Una matriz propiamente dicha (varias columnas)
     else:
         positions_list.append([i, j])
         positions_list.append([i, j-1])
         positions_list.append([i-1, j])
         positions_list.append([i, j+1])
         positions_list.append([i+1, j])
-    
     return positions_list
 
 def get_neighbour_values(positions_list, matrix):
+    '''
+    Valorando los cinco posibles vecinos, devuelve una lista con los valores del elemento y sus vecinos QUE SÍ EXISTEN (desestima, en bordes y esquinas, los vecinos que no existen)
+    '''
+
     values = []
     for i in range(len(positions_list)):
-            valor = matrix[positions_list[i][0]][positions_list[i][1]]
-            values.append(valor)
+        # Si la posición del vecino es menor que cero y mayor que la longitud de la matriz (aka "fuera de la matriz"), basándome en sus coordenadas en positions_list ([i][0] y [i][1]) (no existen)
+        if (positions_list[i][0] >= 0 and positions_list[i][0] < (len(matrix))) and (positions_list[i][1] >= 0 and positions_list[i][1] < (len(matrix[0]))):
+            # Sacamos el valor del elemento y vecinos dentro de la matriz (existen)
+            elt_value = matrix[positions_list[i][0]][positions_list[i][1]]
+            # Añadimos cada uno de esos valores al array values (inicialmente vacío)
+            values.append(elt_value)
     return values
 
 def get_average(numbers):
