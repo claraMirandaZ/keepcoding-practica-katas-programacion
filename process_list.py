@@ -4,7 +4,6 @@ def process_list(elements):
     '''
     Recibe una lista de números y devuelve una nueva con los elementos cambiados. Cada elemento de la nueva lista será el promedio del valor antiguo y el de sus vecinos
     '''
-
     # Creo una lista vacía donde ir acumulando
     processed_list = []
 
@@ -25,7 +24,6 @@ def  process_element(index, elements):
     '''
     Recibe el índice de un elemento y la lista en la que está, calcula su promedio con sus vecinos y devuelve dicho promedio
     '''
-
     # Obtengo la lista de vecinos...
     indices = get_neighbor_index(index, elements)
     values = get_neighbor_values(indices, elements)
@@ -40,7 +38,6 @@ def get_neighbor_index(index, elements):
     '''
     Devuelve la lista de índices de los vecinos, incluido el índice del propio elemento
     '''
-
     indices = []
     if index == 0:
         # El primero
