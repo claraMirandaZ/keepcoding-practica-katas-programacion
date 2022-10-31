@@ -2,6 +2,50 @@ from functools import reduce
 
 def process_matrix(matrix):
     '''
+    Gestión de errores (validación de la matriz)
+    '''
+
+    # Si la matriz es una lista vacía... devuelve una lista vacía
+    if matrix == []:
+        return []
+    # Si la matriz es numérica, ejecuta la función principal (la matriz es una lista de listas que tienen el mismo tamaño y contienen números)
+    elif is_numerical_matrix(matrix):
+        return _process_matrix(matrix)
+    else:
+    # Para todo lo demás, devuelve un error
+        raise ValueError('Neo, this is not a valid matrix')
+
+def is_numerical_matrix(matrix):
+    '''
+    Recibe una lista y devuelve True si y solo si:
+    - Matrix es una lista de listas.
+    - Las sublistas son todas del mismo tamaño.
+    - El contenido de las sublistas es sólo numeros.
+    '''
+
+    # La matriz es una lista de listas
+    bool_matrix = all([isinstance(arr, list) for arr in matrix])
+    bool_result = True
+
+    if bool_matrix:
+        # Las sublistas son todas del mismo tamaño
+        arr_size = all(len(matrix[0])== len(i) for i in matrix)
+        if arr_size:
+            for i, row in enumerate(matrix):
+                for j, column in enumerate(matrix[0]):
+                    # El contenido son sólo números
+                    if type(matrix[i][j]) != int:
+                        bool_result = False
+                        # break
+        else:
+            bool_result = False
+    else:
+        bool_result = False
+
+    return bool_result
+
+def _process_matrix(matrix):
+    '''
     Recibe una matriz (lista de listas) de números y devuelve una nueva (con el mismo tamaño y número de elementos) con sus elementos cambiados. Cada elemento de la nueva matriz será el promedio del valor antiguo y el de sus vecinos.
     Con process_matrix transformamos los elementos de la matriz original.
     '''
